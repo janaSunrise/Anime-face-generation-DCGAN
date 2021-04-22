@@ -29,3 +29,5 @@ logs/
 
 # MacOS generated file
 .DS_STORE
+
+generated/
