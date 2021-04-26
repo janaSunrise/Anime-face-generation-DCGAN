@@ -14,6 +14,15 @@ Here's how to install the dependencies, and get started.
 
 And you're done, and you can run any of the files, and test them.
 
+### Project structure
+
+This project has 3 main sections.
+
+- `src/` Contains the python scripts for training the ML Models.
+- `notebooks/` contains the jupyter notebooks with explanations and the outputs of our end
+  goal.
+- `models/` contains the exported model to make your work easy.
+
 ## Contributing
 
 Contributions, issues and feature requests are welcome. After cloning & setting up project locally, you
