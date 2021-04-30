@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This file is for demostration on How to use exported models, by loading them and generating
+This file is for demonstration on How to use exported models, by loading them and generating
 images using them.
 """
 
@@ -18,19 +18,24 @@ latent_size = 128
 batch_size = 128
 stats = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)
 
+
 # Define the utility methods we need
 def denorm(img_tensors):
     return img_tensors * stats[1][0] + stats[0][0]
 
+
 def show_images(images, nmax=64):
     fig, ax = plt.subplots(figsize=(8, 8))
-    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xticks([]);
+    ax.set_yticks([])
     ax.imshow(make_grid(denorm(images.detach()[:nmax]), nrow=8).permute(1, 2, 0))
+
 
 def show_batch(dl, nmax=64):
     for images, _ in dl:
         show_images(images, nmax)
         break
+
 
 # Define the models and load the exported models
 discriminator = nn.Sequential(
@@ -92,7 +97,7 @@ generator = nn.Sequential(
 )
 
 # Load the Saved models
-## MAP Them to use CPU, so It would work for any machine
+# MAP Them to use CPU, so It would work for any machine
 generator.load_state_dict(torch.load("generator_model.bin", map_location=torch.device('cpu')))
 discriminator.load_state_dict(torch.load("discriminator_model.bin", map_location=torch.device('cpu')))
 
@@ -103,6 +108,7 @@ discriminator.eval()
 # Define the method we need for generating, and saving images
 sample_dir = 'generated'
 os.makedirs(sample_dir, exist_ok=True)
+
 
 def save_samples(index, show=True):
     latent_tensors = torch.randn(64, latent_size, 1, 1, device=torch.device('cpu'))
@@ -115,22 +121,26 @@ def save_samples(index, show=True):
 
     if show:
         fig, ax = plt.subplots(figsize=(8, 8))
-        ax.set_xticks([]); ax.set_yticks([])
+        ax.set_xticks([])
+        ax.set_yticks([])
         ax.imshow(make_grid(fake_images.cpu().detach(), nrow=8).permute(1, 2, 0))
+
 
 # Since it works pretty well, We can now generate images
 for epoch in range(20):
-  save_samples(epoch + 1, show=False)
+    save_samples(epoch + 1, show=False)
+
 
 # That worked great! Time to export into a video!
 def generate_video(generated_location, save_filename):
     files = [os.path.join(sample_dir, f) for f in os.listdir(sample_dir) if generated_location in f]
     files.sort()
 
-    out = cv2.VideoWriter(save_filename, cv2.VideoWriter_fourcc(*'MP4V'), 1, (530,530))
+    out = cv2.VideoWriter(save_filename, cv2.VideoWriter_fourcc(*'MP4V'), 1, (530, 530))
     [out.write(cv2.imread(fname)) for fname in files]
     out.release()
 
     print("Done, Exported as {}".format(save_filename))
+
 
 generate_video("generated", "exported_model_generation.avi")
