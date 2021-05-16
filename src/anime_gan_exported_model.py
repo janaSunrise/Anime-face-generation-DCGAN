@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This file is for demonstration on How to use exported models, by loading them and generating
 images using them.
@@ -26,7 +25,7 @@ def denorm(img_tensors):
 
 def show_images(images, nmax=64):
     fig, ax = plt.subplots(figsize=(8, 8))
-    ax.set_xticks([]);
+    ax.set_xticks([])
     ax.set_yticks([])
     ax.imshow(make_grid(denorm(images.detach()[:nmax]), nrow=8).permute(1, 2, 0))
 
@@ -70,8 +69,9 @@ discriminator = nn.Sequential(
 
 generator = nn.Sequential(
     # in: latent_size x 1 x 1
-
-    nn.ConvTranspose2d(latent_size, 512, kernel_size=4, stride=1, padding=0, bias=False),
+    nn.ConvTranspose2d(
+        latent_size, 512, kernel_size=4, stride=1, padding=0, bias=False
+    ),
     nn.BatchNorm2d(512),
     nn.ReLU(True),
     # out: 512 x 4 x 4
@@ -98,26 +98,26 @@ generator = nn.Sequential(
 
 # Load the Saved models
 # MAP Them to use CPU, so It would work for any machine
-generator.load_state_dict(torch.load("generator_model.bin", map_location=torch.device('cpu')))
-discriminator.load_state_dict(torch.load("discriminator_model.bin", map_location=torch.device('cpu')))
+generator.load_state_dict(torch.load("generator_model.bin", map_location=torch.device("cpu")))
+discriminator.load_state_dict(torch.load("discriminator_model.bin", map_location=torch.device("cpu")))
 
 # Finally, Evaluate them
 generator.eval()
 discriminator.eval()
 
 # Define the method we need for generating, and saving images
-sample_dir = 'generated'
+sample_dir = "generated"
 os.makedirs(sample_dir, exist_ok=True)
 
 
 def save_samples(index, show=True):
-    latent_tensors = torch.randn(64, latent_size, 1, 1, device=torch.device('cpu'))
+    latent_tensors = torch.randn(64, latent_size, 1, 1, device=torch.device("cpu"))
 
     fake_images = generator(latent_tensors)
-    fake_fname = 'generated-images-{0:0=4d}.png'.format(index)
+    fake_fname = "generated-images-{0:0=4d}.png".format(index)
 
     save_image(denorm(fake_images), os.path.join(sample_dir, fake_fname), nrow=8)
-    print('Saving', fake_fname)
+    print("Saving", fake_fname)
 
     if show:
         fig, ax = plt.subplots(figsize=(8, 8))
@@ -126,17 +126,21 @@ def save_samples(index, show=True):
         ax.imshow(make_grid(fake_images.cpu().detach(), nrow=8).permute(1, 2, 0))
 
 
-# Since it works pretty well, We can now generate images
+# Generate and save image frames.
 for epoch in range(20):
     save_samples(epoch + 1, show=False)
 
 
-# That worked great! Time to export into a video!
+# Generate a video from the exported image frames.
 def generate_video(generated_location, save_filename):
-    files = [os.path.join(sample_dir, f) for f in os.listdir(sample_dir) if generated_location in f]
+    files = [
+        os.path.join(sample_dir, f)
+        for f in os.listdir(sample_dir)
+        if generated_location in f
+    ]
     files.sort()
 
-    out = cv2.VideoWriter(save_filename, cv2.VideoWriter_fourcc(*'MP4V'), 1, (530, 530))
+    out = cv2.VideoWriter(save_filename, cv2.VideoWriter_fourcc(*"MP4V"), 1, (530, 530))
     [out.write(cv2.imread(fname)) for fname in files]
     out.release()
 

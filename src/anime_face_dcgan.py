@@ -14,9 +14,9 @@ from torchvision.utils import save_image
 from tqdm import tqdm
 
 # Download the dataset
-open.download('https://www.kaggle.com/soumikrakshit/anime-faces')
+open.download("https://www.kaggle.com/soumikrakshit/anime-faces")
 
-DATA_DIR = 'anime-faces'
+DATA_DIR = "anime-faces"
 
 # Get all the files downloaded
 print(os.listdir(DATA_DIR))
@@ -30,12 +30,14 @@ stats = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)
 # Loading the data.
 train_ds = ImageFolder(
     DATA_DIR,
-    transform=T.Compose([
-        T.Resize(image_size),
-        T.CenterCrop(image_size),
-        T.ToTensor(),
-        T.Normalize(*stats)
-    ])
+    transform=T.Compose(
+        [
+            T.Resize(image_size),
+            T.CenterCrop(image_size),
+            T.ToTensor(),
+            T.Normalize(*stats),
+        ]
+    ),
 )
 
 train_dl = DataLoader(train_ds, batch_size, shuffle=True, num_workers=3, pin_memory=True)
@@ -45,7 +47,7 @@ train_dl = DataLoader(train_ds, batch_size, shuffle=True, num_workers=3, pin_mem
 def show_images(images, nmax=64):
     fig, ax = plt.subplots(figsize=(8, 8))
 
-    ax.set_xticks([]);
+    ax.set_xticks([])
     ax.set_yticks([])
     ax.imshow(make_grid(denorm(images.detach()[:nmax]), nrow=8).permute(1, 2, 0))
 
@@ -77,7 +79,6 @@ class DeviceDataLoader:
 
 # Basically the loader for the device for training. Supported ones: CPU, GPU (Needs CUDA Enabled)
 def to_device(data, device):
-    """Move tensor(s) to chosen device"""
     if isinstance(data, (list, tuple)):
         return [to_device(x, device) for x in data]
 
@@ -86,9 +87,9 @@ def to_device(data, device):
 
 def get_default_device():
     if torch.cuda.is_available():
-        return torch.device('cuda')
+        return torch.device("cuda:0")
     else:
-        return torch.device('cpu')
+        return torch.device("cpu")
 
 
 device = get_default_device()
@@ -99,7 +100,9 @@ print(f"Device used: {device}")
 latent_size = 128
 
 generator = nn.Sequential(
-    nn.ConvTranspose2d(latent_size, 512, kernel_size=4, stride=1, padding=0, bias=False),
+    nn.ConvTranspose2d(
+        latent_size, 512, kernel_size=4, stride=1, padding=0, bias=False
+    ),
     nn.BatchNorm2d(512),
     nn.ReLU(True),
 
@@ -116,7 +119,7 @@ generator = nn.Sequential(
     nn.ReLU(True),
 
     nn.ConvTranspose2d(64, 3, kernel_size=4, stride=2, padding=1, bias=False),
-    nn.Tanh()
+    nn.Tanh(),
 )
 
 discriminator = nn.Sequential(
@@ -139,7 +142,7 @@ discriminator = nn.Sequential(
     nn.Conv2d(512, 1, kernel_size=4, stride=1, padding=0, bias=False),
 
     nn.Flatten(),
-    nn.Sigmoid()
+    nn.Sigmoid(),
 )
 
 # Convert to device
@@ -193,20 +196,20 @@ def train_discriminator(real_images, opt_d):
 
 
 # Variables
-sample_dir = 'generated'
+sample_dir = "generated"
 os.makedirs(sample_dir, exist_ok=True)
 
 
 def save_samples(index, latent_tensors, show=True):
     fake_images = generator(latent_tensors)
-    fake_fname = 'generated-images-{0:0=4d}.png'.format(index)
+    fake_fname = "generated-images-{0:0=4d}.png".format(index)
 
     save_image(denorm(fake_images), os.path.join(sample_dir, fake_fname), nrow=8)
-    print('Saving', fake_fname)
+    print("Saving", fake_fname)
 
     if show:
         fig, ax = plt.subplots(figsize=(8, 8))
-        ax.set_xticks([]);
+        ax.set_xticks([])
         ax.set_yticks([])
         ax.imshow(make_grid(fake_images.cpu().detach(), nrow=8).permute(1, 2, 0))
 
@@ -239,8 +242,11 @@ def fit(epochs, lr, start_idx=1):
         fake_scores.append(fake_score)
 
         # Log losses & scores (last batch)
-        print("Epoch [{}/{}], loss_g: {:.4f}, loss_d: {:.4f}, real_score: {:.4f}, fake_score: {:.4f}".format(
-            epoch + 1, epochs, loss_g, loss_d, real_score, fake_score))
+        print(
+            "Epoch [{}/{}], loss_g: {:.4f}, loss_d: {:.4f}, real_score: {:.4f}, fake_score: {:.4f}".format(
+                epoch + 1, epochs, loss_g, loss_d, real_score, fake_score
+            )
+        )
 
         # Save generated images
         save_samples(epoch + start_idx, fixed_latent, show=False)
@@ -262,10 +268,12 @@ torch.save(discriminator.state_dict(), "discriminator_model.bin")
 def save_frames_as_video(filename, images_path):
     vid_fname = filename
 
-    files = [os.path.join(sample_dir, f) for f in os.listdir(sample_dir) if images_path in f]
+    files = [
+        os.path.join(sample_dir, f) for f in os.listdir(sample_dir) if images_path in f
+    ]
     files.sort()
 
-    out = cv2.VideoWriter(vid_fname, cv2.VideoWriter_fourcc(*'MP4V'), 1, (530, 530))
+    out = cv2.VideoWriter(vid_fname, cv2.VideoWriter_fourcc(*"MP4V"), 1, (530, 530))
     [out.write(cv2.imread(fname)) for fname in files]
 
     out.release()
