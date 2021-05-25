@@ -23,6 +23,30 @@ This project has 3 main sections.
   goal.
 - `models/` contains the exported model to make your work easy.
 
+### Generating datasets
+
+I have personally used some kaggle datasets to train the model. You can also use the
+script as I have provided in the repository, or make your own.
+
+To make your own, Here are the steps. You need a scraper tool called [gallery-dl](https://github.com/mikf/gallery-dl)
+to download the images first, and then use [Animeface](https://github.com/nya3jp/python-animeface)
+to process the images and get the faces.
+
+- Download the images using `gallery-dl`. Here is a python script to automate it. Note, You need the tags
+  in a file called `tags.txt` in same folder. The tags are pre-added in the repo, inside the `resources`
+  folder.
+  ```python
+  import os
+
+  with open("tags.txt", "r") as f:
+    tags = f.read()
+
+  for tag in tags.split("\n"):
+    os.system(f'gallery-dl --images 1000 "https://danbooru.donmai.us/posts?tags={tag}"')
+  ```
+- Once done, You can follow the anime face documentation and process the data and then build the
+  dataset out of it.
+
 ## Contributing
 
 Contributions, issues and feature requests are welcome. After cloning & setting up project locally, you
