@@ -26,7 +26,16 @@ This project has 3 main sections.
 ### Generating datasets
 
 I have personally used some kaggle datasets to train the model. You can also use the
-script as I have provided in the repository, or make your own.
+script as I have provided in the repository, or download any one dataset as shown in the script, 
+or make your own following the steps given below.
+
+Here are the kaggle datasets I suggest going for,
+- [splcher/animefacedataset](https://kaggle.com/splcher/animefacedataset)
+- [soumikrakshit/anime-faces](https://kaggle.com/soumikrakshit/anime-faces)
+- [scribbless/another-anime-face-dataset](https://kaggle.com/scribbless/another-anime-face-dataset)
+
+I personally recommend using either one of them, or Making a good one yourself from scratch. You could use 
+my script to download and combine the datasets too if you want.
 
 To make your own, Here are the steps. You need a scraper tool called [gallery-dl](https://github.com/mikf/gallery-dl)
 to download the images first, and then use [Animeface](https://github.com/nya3jp/python-animeface)
