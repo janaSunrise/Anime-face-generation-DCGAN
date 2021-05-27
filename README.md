@@ -22,6 +22,7 @@ This project has 3 main sections.
 - `notebooks/` contains the jupyter notebooks with explanations and the outputs of our end
   goal.
 - `models/` contains the exported model to make your work easy.
+- `resources/` contain the extra things for usage.
 
 ### Generating datasets
 
