@@ -30,7 +30,7 @@ I have personally used some kaggle datasets to train the model. You can also use
 script as I have provided in the repository, or download any one dataset as shown in the script, 
 or make your own following the steps given below.
 
-Here are the kaggle datasets I suggest going for,
+Here are the kaggle datasets I suggest using for training.
 - [splcher/animefacedataset](https://kaggle.com/splcher/animefacedataset)
 - [soumikrakshit/anime-faces](https://kaggle.com/soumikrakshit/anime-faces)
 - [scribbless/another-anime-face-dataset](https://kaggle.com/scribbless/another-anime-face-dataset)
@@ -72,5 +72,5 @@ We love people's support in growing and improving. Be sure to leave a ⭐️ if 
 also be sure to contribute, if you're interested!
 
 <div align="center">
-Made by Sunrit Jana with <3
+Made by Sunrit Jana with ♥
 </div>
