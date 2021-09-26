@@ -2,7 +2,7 @@
 
 > An interesting and special GAN method consisting of convolutional layers to generate pixel perfect anime images.
 
-## Installation and usage.
+## Installation and usage
 
 This project uses `pipenv` for dependency management. You need to ensure that you have `pipenv`
 installed on your system.
@@ -16,7 +16,7 @@ And you're done, and you can run any of the files, and test them.
 
 ### Project structure
 
-This project has 3 main sections.
+This project is structured as follows,
 
 - `src/` Contains the python scripts for training the ML Models.
 - `notebooks/` contains the jupyter notebooks with explanations and the outputs of our end
